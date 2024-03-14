@@ -1,4 +1,4 @@
-package com.bookmysport.custom_game_service.Controllers;
+package com.bookmysport.custom_game_service.Middlewares;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import com.bookmysport.custom_game_service.Models.ResponseMessage;
 import reactor.core.publisher.Mono;
 
 @Service
-public class GetSUserDetailsMW {
+public class GetUserDetailsMW {
 
     @Autowired
     private WebClient webClient;

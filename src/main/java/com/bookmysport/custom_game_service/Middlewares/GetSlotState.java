@@ -53,7 +53,7 @@ public class GetSlotState {
 
             } else {
                 responseMessage.setSuccess(false);
-                responseMessage.setMessage("Slot full inside middleware");
+                responseMessage.setMessage("Slot full");
                 return ResponseEntity.badRequest().body(responseMessage);
             }
 

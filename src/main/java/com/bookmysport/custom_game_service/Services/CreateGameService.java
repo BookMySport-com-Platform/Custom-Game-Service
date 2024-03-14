@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.bookmysport.custom_game_service.Controllers.GetSUserDetailsMW;
 import com.bookmysport.custom_game_service.Middlewares.GetPriceOfSport;
 import com.bookmysport.custom_game_service.Middlewares.GetSlotState;
+import com.bookmysport.custom_game_service.Middlewares.GetUserDetailsMW;
 import com.bookmysport.custom_game_service.Models.CustomGameModel;
 import com.bookmysport.custom_game_service.Models.ResponseMessage;
 import com.bookmysport.custom_game_service.Repositories.CustomGameRepo;
@@ -21,7 +21,7 @@ public class CreateGameService {
     private GetSlotState getSlotState;
 
     @Autowired
-    private GetSUserDetailsMW getSUserDetailsMW;
+    private GetUserDetailsMW getSUserDetailsMW;
 
     @Autowired
     private GetPriceOfSport getPriceOfSport;
@@ -60,7 +60,7 @@ public class CreateGameService {
 
             } else {
                 responseMessage.setSuccess(false);
-                responseMessage.setMessage("Slot full inside createGameService");
+                responseMessage.setMessage("Slot full");
                 responseMessage.setUserDetails(null);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseMessage);
             }
