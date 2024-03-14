@@ -1,11 +1,18 @@
 package com.bookmysport.custom_game_service.Services;
 
-import java.sql.Date;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.bookmysport.custom_game_service.Controllers.GetSUserDetailsMW;
+import com.bookmysport.custom_game_service.Middlewares.GetPriceOfSport;
 import com.bookmysport.custom_game_service.Middlewares.GetSlotState;
+import com.bookmysport.custom_game_service.Models.CustomGameModel;
+import com.bookmysport.custom_game_service.Models.ResponseMessage;
+import com.bookmysport.custom_game_service.Repositories.CustomGameRepo;
 
 @Service
 public class CreateGameService {
@@ -13,15 +20,56 @@ public class CreateGameService {
     @Autowired
     private GetSlotState getSlotState;
 
-    public String createGameService(String token, String role, String areanId, Date dateOfBooking, String sportId,
-            int startTime,
-            int stopTime, String courtNumber) {
+    @Autowired
+    private GetSUserDetailsMW getSUserDetailsMW;
 
-        System.out.println(areanId);
-        String msg = getSlotState.getSlotStateMW(areanId, dateOfBooking, startTime, stopTime, courtNumber, sportId)
-                .getBody().getMessage();
+    @Autowired
+    private GetPriceOfSport getPriceOfSport;
 
-        return msg;
+    @Autowired
+    private CustomGameRepo customGameRepo;
+
+    @Autowired
+    private ResponseMessage responseMessage;
+
+    public ResponseEntity<ResponseMessage> createGameService(String token, String role, CustomGameModel game) {
+        try {
+            boolean slotCondition = getSlotState
+                    .getSlotStateMW(game.getArenaId().toString(), game.getDateOfBooking(), game.getStartTime(),
+                            game.getStopTime(), game.getCourtNumber(), game.getSportId().toString())
+                    .getBody().getSuccess();
+            if (slotCondition) {
+                String userId = getSUserDetailsMW.getUserDetailsByToken(token, role).getBody().get("id").toString();
+                game.setRole("host");
+                game.setUserId(UUID.fromString(userId));
+
+                int priceOfSportPerHour = (int) getPriceOfSport
+                        .getPriceOfSportMW(game.getSportId().toString(), game.getArenaId().toString()).getBody().get("message");
+
+                int totalPrice = priceOfSportPerHour * (game.getStopTime() - game.getStartTime())
+                        * game.getCourtNumber().split(",").length; 
+
+                game.setPricePaid(totalPrice);
+
+                customGameRepo.save(game);
+
+                responseMessage.setSuccess(true);
+                responseMessage.setMessage("Custom game booked");
+                responseMessage.setUserDetails(null);
+                return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
+
+            } else {
+                responseMessage.setSuccess(false);
+                responseMessage.setMessage("Slot full inside createGameService");
+                responseMessage.setUserDetails(null);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseMessage);
+            }
+        } catch (Exception e) {
+            responseMessage.setSuccess(false);
+            responseMessage.setMessage("Internal Server Error in createGameService. Reason: " + e.getMessage());
+            responseMessage.setUserDetails(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
+        }
 
     }
 }
