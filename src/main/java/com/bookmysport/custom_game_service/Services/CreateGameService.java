@@ -38,16 +38,21 @@ public class CreateGameService {
                     .getSlotStateMW(game.getArenaId().toString(), game.getDateOfBooking(), game.getStartTime(),
                             game.getStopTime(), game.getCourtNumber(), game.getSportId().toString())
                     .getBody().getSuccess();
-            if (slotCondition) {
+
+            CustomGameModel gameExistence = customGameRepo.findSlotExists(game.getArenaId(), game.getSportId(),
+                    game.getDateOfBooking(), game.getStartTime(), game.getStopTime(), game.getCourtNumber());
+
+            if (slotCondition && gameExistence == null) {
                 String userId = getSUserDetailsMW.getUserDetailsByToken(token, role).getBody().get("id").toString();
                 game.setRole("host");
                 game.setUserId(UUID.fromString(userId));
 
                 int priceOfSportPerHour = (int) getPriceOfSport
-                        .getPriceOfSportMW(game.getSportId().toString(), game.getArenaId().toString()).getBody().get("message");
+                        .getPriceOfSportMW(game.getSportId().toString(), game.getArenaId().toString()).getBody()
+                        .get("message");
 
                 int totalPrice = priceOfSportPerHour * (game.getStopTime() - game.getStartTime())
-                        * game.getCourtNumber().split(",").length; 
+                        * game.getCourtNumber().split(",").length;
 
                 game.setPricePaid(totalPrice);
 
