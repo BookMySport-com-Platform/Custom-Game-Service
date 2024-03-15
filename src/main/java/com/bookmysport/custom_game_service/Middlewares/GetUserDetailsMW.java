@@ -45,7 +45,7 @@ public class GetUserDetailsMW {
             response.put("success", false);
             response.put("message", e.getMessage());
 
-            responseMessage.setUserDetails(response);
+            responseMessage.setDetails(response);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }

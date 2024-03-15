@@ -11,5 +11,5 @@ import lombok.Data;
 public class ResponseMessage {
     private Boolean success;
     private String message;
-    private Map<String, Object> userDetails;
+    private Map<String, Object> details;
 }

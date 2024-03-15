@@ -60,19 +60,19 @@ public class CreateGameService {
 
                 responseMessage.setSuccess(true);
                 responseMessage.setMessage("Custom game booked");
-                responseMessage.setUserDetails(null);
+                responseMessage.setDetails(null);
                 return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
 
             } else {
                 responseMessage.setSuccess(false);
                 responseMessage.setMessage("Slot full");
-                responseMessage.setUserDetails(null);
+                responseMessage.setDetails(null);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseMessage);
             }
         } catch (Exception e) {
             responseMessage.setSuccess(false);
             responseMessage.setMessage("Internal Server Error in createGameService. Reason: " + e.getMessage());
-            responseMessage.setUserDetails(null);
+            responseMessage.setDetails(null);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
         }
 
