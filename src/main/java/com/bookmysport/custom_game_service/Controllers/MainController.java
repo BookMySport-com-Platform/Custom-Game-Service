@@ -57,15 +57,20 @@ public class MainController {
 
     // This returns all the games created by the user with role host
     @GetMapping("getgamescreatedbyhost")
-    public ResponseEntity<Map<String, Object>> getGamesCreatedByHost(@RequestHeader String token, @RequestHeader String role) {
+    public ResponseEntity<Map<String, Object>> getGamesCreatedByHost(@RequestHeader String token,
+            @RequestHeader String role) {
         return fetchGamesService.fetchAllCustomGamesByHost(token, role);
     }
 
-    //This returns the game by taking the id as input
+    // This returns the game by taking the id as input
     @GetMapping("getcustomgamebygameid")
-    public CustomGameModel getCustomGameByGameId(String gameId)
-    {
+    public CustomGameModel getCustomGameByGameId(String gameId) {
         return customGameRepo.findByGameId(UUID.fromString(gameId));
+    }
+
+    @PostMapping("getslotstate")
+    public ResponseEntity<ResponseMessage> checkSlot(@RequestBody CustomGameModel gameDetails) {
+        return fetchGamesService.checkSlot(gameDetails);
     }
 
 }

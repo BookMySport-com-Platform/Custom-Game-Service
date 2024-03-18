@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.bookmysport.custom_game_service.Middlewares.GetUserDetailsMW;
 import com.bookmysport.custom_game_service.Models.CustomGameModel;
+import com.bookmysport.custom_game_service.Models.ResponseMessage;
 import com.bookmysport.custom_game_service.Repositories.CustomGameRepo;
 
 @Service
@@ -22,6 +23,9 @@ public class FetchGamesService {
 
     @Autowired
     private CustomGameRepo customGameRepo;
+
+    @Autowired
+    private ResponseMessage responseMessage;
 
     public ResponseEntity<Map<String, Object>> fetchAllCustomGamesByHost(String token, String role) {
         Map<String, Object> response = new HashMap<>();
@@ -52,5 +56,31 @@ public class FetchGamesService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
+    }
+
+    public ResponseEntity<ResponseMessage> checkSlot(CustomGameModel slotToBeChecked) {
+        try {
+            CustomGameModel gameExistence = customGameRepo.findSlotExists(slotToBeChecked.getArenaId(),
+                    slotToBeChecked.getSportId(),
+                    slotToBeChecked.getDateOfBooking(), slotToBeChecked.getStartTime(), slotToBeChecked.getStopTime(),
+                    slotToBeChecked.getCourtNumber());
+
+            if (gameExistence == null) {
+                responseMessage.setSuccess(true);
+                responseMessage.setMessage("Slot is empty");
+                responseMessage.setDetails(null);
+                return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
+            } else {
+                responseMessage.setSuccess(false);
+                responseMessage.setMessage("Slot is full");
+                responseMessage.setDetails(null);
+                return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
+            }
+        } catch (Exception e) {
+            responseMessage.setSuccess(false);
+            responseMessage.setMessage("Internal Server Error in checkSlot. Reason: " + e.getMessage());
+            responseMessage.setDetails(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseMessage);
+        }
     }
 }
