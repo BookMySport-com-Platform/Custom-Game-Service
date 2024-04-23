@@ -16,6 +16,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 @RestController
 @RequestMapping("api")
+@CrossOrigin(origins = "http://localhost:5173")
 public class MainController {
 
     @Autowired
@@ -71,6 +73,12 @@ public class MainController {
     @PostMapping("getslotstate")
     public ResponseEntity<ResponseMessage> checkSlot(@RequestBody CustomGameModel gameDetails) {
         return fetchGamesService.checkSlot(gameDetails);
+    }
+
+    @PostMapping("getcustombookedslots")
+    public CustomGameModel getCustomBookedSlots(@RequestBody CustomGameModel slotInfo)
+    {
+        return customGameRepo.findBookedSlots(slotInfo.getArenaId(), slotInfo.getSportId(), slotInfo.getDateOfBooking(), slotInfo.getStartTime(), slotInfo.getStopTime());
     }
 
 }

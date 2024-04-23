@@ -12,7 +12,6 @@ import com.bookmysport.custom_game_service.Models.CustomGameModel;
 import jakarta.transaction.Transactional;
 import java.util.List;
 
-
 public interface CustomGameRepo extends JpaRepository<CustomGameModel, UUID> {
 
     @Transactional
@@ -20,6 +19,12 @@ public interface CustomGameRepo extends JpaRepository<CustomGameModel, UUID> {
     CustomGameModel findSlotExists(@Param("arenaId") UUID arenaId, @Param("sportId") UUID sportId,
             @Param("dateOfBooking") Date dateOfBooking, @Param("startTime") int startTime,
             @Param("stopTime") int stopTime, @Param("courtNumber") String courtNumber);
+
+    @Transactional
+    @Query(value = "SELECT * FROM custom_games WHERE arena_id = :arenaId AND sport_id= :sportId AND date_of_booking = :dateOfBooking AND (start_time = :startTime OR stop_time = :stopTime) ", nativeQuery = true)
+    CustomGameModel findBookedSlots(@Param("arenaId") UUID arenaId, @Param("sportId") UUID sportId,
+            @Param("dateOfBooking") Date dateOfBooking, @Param("startTime") int startTime,
+            @Param("stopTime") int stopTime);
 
     CustomGameModel findByGameId(UUID gameId);
 
