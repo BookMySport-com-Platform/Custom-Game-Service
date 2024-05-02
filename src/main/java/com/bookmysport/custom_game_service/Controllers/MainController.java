@@ -4,8 +4,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bookmysport.custom_game_service.Models.CustomGameModel;
+import com.bookmysport.custom_game_service.Models.JoineeGameModel;
 import com.bookmysport.custom_game_service.Models.ResponseMessage;
 import com.bookmysport.custom_game_service.Repositories.CustomGameRepo;
+import com.bookmysport.custom_game_service.Repositories.JoineeGameRepo;
 import com.bookmysport.custom_game_service.Services.CreateGameService;
 import com.bookmysport.custom_game_service.Services.FetchGamesService;
 import com.bookmysport.custom_game_service.Services.JoinTheGameService;
@@ -38,6 +40,9 @@ public class MainController {
 
     @Autowired
     private FetchGamesService fetchGamesService;
+
+    @Autowired
+    private JoineeGameRepo joineeGameRepo;
 
     @PostMapping("bookcustomgame")
     public ResponseEntity<ResponseMessage> bookCustomGame(@RequestHeader String token, @RequestHeader String role,
@@ -79,6 +84,12 @@ public class MainController {
     public CustomGameModel getCustomBookedSlots(@RequestBody CustomGameModel slotInfo)
     {
         return customGameRepo.findBookedSlots(slotInfo.getArenaId(), slotInfo.getSportId(), slotInfo.getDateOfBooking(), slotInfo.getStartTime(), slotInfo.getStopTime());
+    }
+
+    @GetMapping("getplayersofcustomgame")
+    public List<JoineeGameModel> getPlayersOfCustomGameByGameId(@RequestHeader String gameId)
+    {
+        return joineeGameRepo.findByGameId(UUID.fromString(gameId));
     }
 
 }
