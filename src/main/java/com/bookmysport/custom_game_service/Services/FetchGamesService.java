@@ -47,13 +47,13 @@ public class FetchGamesService {
             } else {
                 response.put("success", false);
                 response.put("message", "User doesn't exists");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
             }
         } catch (Exception e) {
             response.put("success", false);
             response.put("message", "Internal server error in fetchAllCustomGamesByHost. Reason: " + e.getMessage());
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
 
     }
@@ -80,7 +80,7 @@ public class FetchGamesService {
             responseMessage.setSuccess(false);
             responseMessage.setMessage("Internal Server Error in checkSlot. Reason: " + e.getMessage());
             responseMessage.setDetails(null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseMessage);
+            return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
         }
     }
 }

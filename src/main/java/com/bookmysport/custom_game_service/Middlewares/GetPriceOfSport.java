@@ -40,7 +40,7 @@ public class GetPriceOfSport {
             } else {
                 response.put("success", false);
                 response.put("message", "No sport exists");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
             }
         } catch (Exception e) {
             response.put("success", false);

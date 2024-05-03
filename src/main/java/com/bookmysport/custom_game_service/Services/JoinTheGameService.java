@@ -49,33 +49,33 @@ public class JoinTheGameService {
                             joineeGameRepo.save(joinGame);
 
                             responseMessage.setSuccess(true);
-                            responseMessage.setMessage("Joined the game with game id: " + gameId);
+                            responseMessage.setMessage("Joined the game successfully");
                             responseMessage.setDetails(null);
                             return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
                         } else {
                             responseMessage.setSuccess(false);
-                            responseMessage.setMessage("Custom game with ID " + gameId + " has been filled");
+                            responseMessage.setMessage("Custom game has been filled");
                             responseMessage.setDetails(null);
-                            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseMessage);
+                            return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
                         }
                     } else {
                         responseMessage.setSuccess(false);
-                        responseMessage.setMessage("You have already joined this game. Game ID: " + gameId);
+                        responseMessage.setMessage("You have already joined this game.");
                         responseMessage.setDetails(null);
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseMessage);
+                        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
                     }
 
                 } else {
                     responseMessage.setSuccess(false);
-                    responseMessage.setMessage("Custom game with gameId - " + gameId + " doesn't exists");
+                    responseMessage.setMessage("Custom game doesn't exists");
                     responseMessage.setDetails(null);
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseMessage);
+                    return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
                 }
             } else {
                 responseMessage.setSuccess(false);
-                responseMessage.setMessage("User doen't exists");
+                responseMessage.setMessage("User dosn't exists");
                 responseMessage.setDetails(null);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseMessage);
+                return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
             }
 
         } catch (Exception e) {

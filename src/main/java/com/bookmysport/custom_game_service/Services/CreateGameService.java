@@ -67,7 +67,7 @@ public class CreateGameService {
                 responseMessage.setSuccess(false);
                 responseMessage.setMessage("Slot full");
                 responseMessage.setDetails(null);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseMessage);
+                return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
             }
         } catch (Exception e) {
             responseMessage.setSuccess(false);

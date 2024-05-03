@@ -54,7 +54,7 @@ public class GetSlotState {
             } else {
                 responseMessage.setSuccess(false);
                 responseMessage.setMessage("Slot full");
-                return ResponseEntity.badRequest().body(responseMessage);
+                return ResponseEntity.ok().body(responseMessage);
             }
 
         } catch (Exception e) {
