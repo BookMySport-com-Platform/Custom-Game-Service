@@ -34,7 +34,7 @@ public class JoinTheGameService {
             if (userId != null) {
                 if (customGameRepo.findByGameId(UUID.fromString(gameId)) != null) {
 
-                    if (joineeGameRepo.findByUserId(UUID.fromString(userId)) == null) {
+                    if (joineeGameRepo.findByUserIdAndGameId(UUID.fromString(userId),UUID.fromString(gameId)) == null) {
                         int numberOfPlayersEnteredByHost = customGameRepo.findByGameId(UUID.fromString(gameId))
                                 .getNumberOfPlayers();
                         int playersJoinedToGame = joineeGameRepo.findByGameId(UUID.fromString(gameId)).size();
